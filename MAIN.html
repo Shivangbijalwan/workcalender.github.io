@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rotation Study Calendar — Aug 2026 to Aug 2028</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F4EF;
+    --card:#FFFFFF;
+    --ink:#22231E;
+    --ink-soft:#6B6A63;
+    --line:#E2E0D7;
+    --js:#C8912A;
+    --js-bg:#FBF0DB;
+    --dsa:#5B5FE9;
+    --dsa-bg:#EAEAFC;
+    --pm:#1C8F6E;
+    --pm-bg:#E1F3EC;
+    --ai:#D8467E;
+    --ai-bg:#FBE6EE;
+    --bus:#35618E;
+    --bus-bg:#E2ECF6;
+    --uiux:#9B4FD6;
+    --uiux-bg:#F2E7FB;
+    --da:#1C93A6;
+    --da-bg:#DEF4F7;
+    --comm:#D9633C;
+    --comm-bg:#FBE8DF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    padding:28px 20px 60px;
+  }
+  .wrap{max-width:980px;margin:0 auto;}
+  header{margin-bottom:20px;}
+  .eyebrow{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:34px;
+    font-weight:700;
+    margin:0 0 6px;
+    letter-spacing:-.01em;
+  }
+  .sub{color:var(--ink-soft);font-size:14.5px;line-height:1.5;max-width:640px;}
+
+  .phases{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin:20px 0 26px;
+  }
+  .phase{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 12px;
+  }
+  .phase .p-label{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;}
+  .phase .p-range{font-size:11px;color:var(--ink-soft);margin:2px 0 5px;}
+  .phase .p-goal{font-size:12px;line-height:1.35;}
+
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:0 0 26px;
+  }
+  .tag{
+    display:flex;align-items:center;gap:7px;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:12.5px;font-weight:600;
+    padding:6px 12px;border-radius:20px;
+    border:1px solid var(--line);
+    background:var(--card);
+  }
+  .dot{width:9px;height:9px;border-radius:50%;}
+  .dot.js{background:var(--js);} .dot.dsa{background:var(--dsa);}
+  .dot.pm{background:var(--pm);} .dot.ai{background:var(--ai);}
+  .dot.bus{background:var(--bus);} .dot.uiux{background:var(--uiux);}
+  .dot.da{background:var(--da);} .dot.comm{background:var(--comm);}
+
+  #jump{
+    margin-bottom:24px;
+    display:flex;flex-wrap:wrap;gap:6px;
+  }
+  #jump a{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:11.5px;font-weight:600;
+    padding:5px 10px;border-radius:7px;
+    background:var(--card);border:1px solid var(--line);
+    color:var(--ink-soft);text-decoration:none;
+  }
+  #jump a:hover{background:var(--line);}
+
+  .month{margin-bottom:38px;scroll-margin-top:16px;}
+  .month h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:19px;font-weight:700;
+    margin:0 0 12px;
+    padding-bottom:8px;
+    border-bottom:2px solid var(--ink);
+    display:inline-block;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:6px;
+  }
+  .wd{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:11px;font-weight:600;
+    color:var(--ink-soft);
+    text-align:center;
+    padding-bottom:4px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+  }
+  .cell{
+    min-height:78px;
+    border-radius:10px;
+    padding:8px 8px 7px;
+    cursor:pointer;
+    border:1px solid var(--line);
+    background:var(--card);
+    display:flex;flex-direction:column;justify-content:space-between;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .cell:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.08);}
+  .cell.empty{visibility:hidden;pointer-events:none;}
+  .cell .num{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;}
+  .cell .subj{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:10px;font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    padding:2px 6px;border-radius:5px;
+    display:inline-block;width:fit-content;
+  }
+  .cell .topic{font-size:11px;line-height:1.25;color:var(--ink);opacity:.85;}
+
+  .cell.js{background:var(--js-bg);} .cell.js .subj{background:var(--js);color:#fff;}
+  .cell.dsa{background:var(--dsa-bg);} .cell.dsa .subj{background:var(--dsa);color:#fff;}
+  .cell.pm{background:var(--pm-bg);} .cell.pm .subj{background:var(--pm);color:#fff;}
+  .cell.ai{background:var(--ai-bg);} .cell.ai .subj{background:var(--ai);color:#fff;}
+  .cell.bus{background:var(--bus-bg);} .cell.bus .subj{background:var(--bus);color:#fff;}
+  .cell.uiux{background:var(--uiux-bg);} .cell.uiux .subj{background:var(--uiux);color:#fff;}
+  .cell.da{background:var(--da-bg);} .cell.da .subj{background:var(--da);color:#fff;}
+  .cell.comm{background:var(--comm-bg);} .cell.comm .subj{background:var(--comm);color:#fff;}
+
+  .overlay{
+    position:fixed;inset:0;background:rgba(20,20,16,.55);
+    display:none;align-items:center;justify-content:center;
+    padding:20px;z-index:50;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--card);
+    max-width:520px;width:100%;
+    border-radius:16px;
+    padding:26px 26px 22px;
+    max-height:86vh;overflow-y:auto;
+    position:relative;
+  }
+  .modal .subj{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    padding:4px 10px;border-radius:6px;display:inline-block;color:#fff;margin-bottom:10px;
+  }
+  .modal h3{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:21px;margin:0 0 4px;line-height:1.25;
+  }
+  .modal .date-line{font-size:12.5px;color:var(--ink-soft);margin-bottom:18px;}
+  .block{margin-bottom:14px;padding-left:14px;border-left:3px solid var(--line);}
+  .block .lbl{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:11.5px;font-weight:700;
+    display:flex;justify-content:space-between;margin-bottom:3px;
+  }
+  .block .desc{font-size:13.5px;line-height:1.5;color:#3a3a34;}
+  .close{
+    position:absolute;top:16px;right:16px;
+    width:30px;height:30px;border-radius:50%;
+    border:1px solid var(--line);background:var(--paper);
+    cursor:pointer;font-size:15px;line-height:1;color:var(--ink-soft);
+  }
+  .close:hover{background:var(--line);}
+  footer{margin-top:30px;font-size:12px;color:var(--ink-soft);text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">One track a day · 2.5 hrs deep focus · 730 days</div>
+    <h1>Rotation Study Calendar</h1>
+    <div class="sub">Aug 17–24: unchanged — JS → DSA → PM → AI every 4 days. From Aug 25: Business, UI/UX and Data Analytics join the rotation as full 2.5-hr days of their own, and Communication gets a dedicated day roughly once a month. JS also switches gears — from Aug 25 it's pure implementation, building real websites 0 to hero, since the basics are already covered. Tap any day for the full plan.</div>
+  </header>
+
+  <div class="phases">
+    <div class="phase"><div class="p-label">Phase 1 · Foundation</div><div class="p-range">Aug 2026 – Jan 2027</div><div class="p-goal">Core fundamentals across all 4 tracks.</div></div>
+    <div class="phase"><div class="p-label">Phase 2 · Depth</div><div class="p-range">Feb 2027 – Jul 2027</div><div class="p-goal">Backends, advanced DSA, ship project 1.</div></div>
+    <div class="phase"><div class="p-label">Phase 3 · Integration</div><div class="p-range">Aug 2027 – Jan 2028</div><div class="p-goal">React, system design, ship project 2.</div></div>
+    <div class="phase"><div class="p-label">Phase 4 · Mastery</div><div class="p-range">Feb 2028 – Aug 2028</div><div class="p-goal">Polish, interviews, portfolio complete.</div></div>
+  </div>
+
+  <div class="legend">
+    <div class="tag"><span class="dot js"></span>JavaScript</div>
+    <div class="tag"><span class="dot dsa"></span>DSA</div>
+    <div class="tag"><span class="dot pm"></span>Product Mgmt</div>
+    <div class="tag"><span class="dot ai"></span>AI Fundamentals</div>
+    <div class="tag"><span class="dot bus"></span>Business</div>
+    <div class="tag"><span class="dot uiux"></span>UI/UX Design</div>
+    <div class="tag"><span class="dot da"></span>Data Analytics</div>
+    <div class="tag"><span class="dot comm"></span>Communication (~monthly)</div>
+  </div>
+
+  <div id="jump"></div>
+
+  <div id="calendar"></div>
+
+  <footer>Send me your daily log and I'll track progress — weekly, we'll review and I can adjust the plan.</footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+const SUBJECTS = {
+  JS:   {name:"JavaScript",       key:"js"},
+  DSA:  {name:"Data Structures & Algorithms", key:"dsa"},
+  PM:   {name:"Product Management", key:"pm"},
+  AI:   {name:"AI Fundamentals",  key:"ai"},
+  BUS:  {name:"Business",         key:"bus"},
+  UIUX: {name:"UI/UX Design",     key:"uiux"},
+  DA:   {name:"Data Analytics",   key:"da"},
+  COMM: {name:"Communication",    key:"comm"}
+};
+const OLD_ORDER = ["JS","DSA","PM","AI"];
+const NEW_ORDER = ["JS","DSA","PM","AI","BUS","UIUX","DA"];
+
+// ---------- Hand-written detailed topics (first 14 sessions of each track) ----------
+const DETAILED = {
+JS: [
+{t:"Variables, Data Types & Operators",
+ learn:"let / const / var, primitive types, comparison & arithmetic operators, type coercion.",
+ practice:"Write 15 examples mixing let/const/var. Predict the output of 10 tricky coercion expressions before running them.",
+ build:"Build a 'profile card' using variables for name/age/bio, output it with a template literal.",
+ review:"Note 3 var-vs-let scoping gotchas you didn't know before today."},
+{t:"Functions, Scope & Return Values",
+ learn:"Function declarations vs expressions vs arrow functions, parameters, the scope chain.",
+ practice:"Write 8 functions incl. greet(), add(), isEven(), factorial() using different syntaxes.",
+ build:"Build a small calculator (add/sub/mul/div) callable from the console.",
+ review:"Write the difference between function scope and block scope, with your own example."},
+{t:"Arrays & Array Methods (map/filter/reduce)",
+ learn:"Array creation, indexing, and how map / filter / reduce / forEach actually work under the hood.",
+ practice:"Solve 10 array-transformation problems using map/filter/reduce only (no for-loops).",
+ build:"Process a list of 20 'products' (name/price): filter by price range, then reduce to a total.",
+ review:"Write one rule for when to reach for map vs forEach vs reduce."},
+{t:"Objects & Object Methods",
+ learn:"Object literals, methods, how `this` behaves, Object.keys/values/entries.",
+ practice:"Create 3 objects for real entities (e.g. book, user, order) and write 2 methods on each.",
+ build:"Build a tiny 'contact book': array of objects with add/search/delete functions.",
+ review:"Note how `this` behaves differently in a regular function vs an arrow function."},
+{t:"Loops (for / while / do-while)",
+ learn:"for, while, do-while, break & continue.",
+ practice:"Print a multiplication table, solve FizzBuzz, and build a pattern with nested loops.",
+ build:"Simulate a number-guessing loop that logs each attempt until it succeeds.",
+ review:"Compare readability of the 3 loop types — which would you default to and why?"},
+{t:"Conditionals (if/else, switch, ternary)",
+ learn:"if/else chains, switch statements, the ternary operator.",
+ practice:"Build a grading system (score → letter grade) written 3 ways: if/else, switch, ternary.",
+ build:"Build a 'should I go outside' decision function using 4+ chained conditions.",
+ review:"Write down when switch is genuinely better than an if/else chain."},
+{t:"Error Handling (try / catch)",
+ learn:"try/catch/finally, throwing custom Error objects.",
+ practice:"Write 5 functions that validate input and throw custom, descriptive errors.",
+ build:"Build an input-validation module for a signup form: email, password, age.",
+ review:"Note 3 real bugs proper error handling would have caught earlier."},
+{t:"Async Basics (callbacks, setTimeout)",
+ learn:"The callback pattern, setTimeout/setInterval, and how 'callback hell' happens.",
+ practice:"Chain 3 nested setTimeout calls to simulate a sequence of timed events.",
+ build:"Simulate a traffic light changing color every 2 seconds using callbacks.",
+ review:"Explain in your own words why callback hell happens and one way to avoid it."},
+{t:"Promises",
+ learn:"The Promise constructor, .then/.catch/.finally, and chaining.",
+ practice:"Convert 3 of your earlier callback functions into promise-based functions.",
+ build:"Build a mock fetchUser() promise that resolves or rejects randomly; chain 3 .then() calls.",
+ review:"Diagram the promise lifecycle: pending → fulfilled/rejected."},
+{t:"Async / Await",
+ learn:"async functions, the await keyword, try/catch with async code.",
+ practice:"Rewrite all of yesterday's promises using async/await.",
+ build:"Write one async function that chains 3 sequential mock API calls in order.",
+ review:"Compare readability: promises vs async/await for the exact same logic."},
+{t:"API Calls with fetch()",
+ learn:"fetch() syntax, response.json(), and basic error handling for network calls.",
+ practice:"Call a free API (JSONPlaceholder or OpenWeather) and log 3 different endpoints.",
+ build:"Fetch and neatly display 5 posts from an API, formatted as readable text.",
+ review:"Note the most common fetch mistakes (forgetting .json(), skipping error handling)."},
+{t:"JSON Parsing & Handling",
+ learn:"JSON.parse / JSON.stringify, and navigating nested JSON structures.",
+ practice:"Parse 3 sample JSON blobs and extract specific nested fields from each.",
+ build:"Write a function that round-trips an array of objects to JSON and back.",
+ review:"List 3 places JSON shows up in real apps (APIs, config files, storage)."},
+{t:"Destructuring & Spread Operator",
+ learn:"Array/object destructuring, the spread and rest syntax.",
+ practice:"Rewrite 10 lines of 'old-style' code using destructuring and spread.",
+ build:"Write a function using rest params that merges any number of objects together.",
+ review:"Note 3 places destructuring genuinely makes your code cleaner, not just shorter."},
+{t:"Template Literals & String Methods",
+ learn:"Template literals plus slice, split, trim, replace, includes and friends.",
+ practice:"Rebuild 5 old string-concatenation snippets using template literals.",
+ build:"Build a 'receipt generator' that formats a list of items/prices into a printable string.",
+ review:"List the 5 string methods you expect to use most going forward."}
+],
+DSA: [
+{t:"Big O Notation",
+ learn:"O(1), O(n), O(n²), O(log n) with concrete examples of each.",
+ practice:"Classify the time complexity of 10 short code snippets on paper first, then verify.",
+ build:"Write 3 tiny functions that clearly demonstrate O(1), O(n), and O(n²) behavior.",
+ review:"Explain Big O to a total beginner in 3 sentences, no jargon."},
+{t:"Array Operations & Complexity",
+ learn:"push/pop/shift/unshift and the real time complexity behind each.",
+ practice:"Implement push/pop/shift/unshift manually, without using the built-ins.",
+ build:"Time-test shift() vs push() on a 10,000-item array and compare the speed gap.",
+ review:"Note why shift/unshift are O(n) while push/pop are O(1)."},
+{t:"String Operations & Complexity",
+ learn:"String immutability in JS and the complexity of common string operations.",
+ practice:"Reverse a string 3 different ways: loop, recursion, and a built-in method.",
+ build:"Write a palindrome checker that runs in O(n) time.",
+ review:"Note why building strings with += inside a big loop can get expensive."},
+{t:"Linear Search vs Binary Search",
+ learn:"How each search works, and why binary search needs sorted data.",
+ practice:"Code both from scratch and test them against 5 different arrays.",
+ build:"Build a 'guess the number' game whose logic mirrors binary search.",
+ review:"Explain, with a small diagram, why binary search is O(log n)."},
+{t:"Bubble Sort",
+ learn:"The swap-based mechanics of bubble sort.",
+ practice:"Implement it, then trace it by hand through a 6-element array.",
+ build:"Add a comparisons/swaps counter to visualize how much work it does.",
+ review:"Note why bubble sort is rarely used in real production code."},
+{t:"Selection Sort",
+ learn:"How selection sort minimizes swaps compared to bubble sort.",
+ practice:"Implement it and compare its swap count against bubble sort on the same array.",
+ build:"Benchmark both sorts on the same 1,000-item random array.",
+ review:"Write the key mechanical difference between the two algorithms."},
+{t:"Insertion Sort & Merge Sort Intro",
+ learn:"Insertion sort's mechanics, plus merge sort's divide-and-conquer idea.",
+ practice:"Implement insertion sort fully; trace merge sort's splitting step on paper.",
+ build:"Compare insertion sort's speed on a nearly-sorted array vs a fully random one.",
+ review:"Explain in your own words why merge sort reaches O(n log n)."},
+{t:"Merge Sort Implementation",
+ learn:"The merge step in detail, and the recursive structure that drives it.",
+ practice:"Implement merge sort fully; trace the recursion through an 8-element example.",
+ build:"Use your merge sort to sort an array of objects by a numeric field.",
+ review:"Draw the recursion tree for sorting 8 elements."},
+{t:"Quick Sort",
+ learn:"Pivot selection strategies and the partitioning logic.",
+ practice:"Implement quicksort with 2 different pivot strategies (first vs random).",
+ build:"Benchmark quicksort vs merge sort on random data vs already-sorted data.",
+ review:"Explain why quicksort's worst case degrades to O(n²)."},
+{t:"Heap Sort",
+ learn:"What a heap is and how the heapify process works.",
+ practice:"Build a max-heap from an array by hand, then implement heap sort.",
+ build:"Use your heap sort logic to pull the top-5 largest values from a dataset.",
+ review:"Note one real use of heaps beyond sorting (hint: priority queues)."},
+{t:"Counting Sort & Radix Sort",
+ learn:"Non-comparison sorting and when it applies (bounded integer ranges).",
+ practice:"Implement counting sort on an array of ages between 0–100.",
+ build:"Implement radix sort on a list of 4-digit numbers.",
+ review:"Note why these sorts can beat O(n log n) in the right situations."},
+{t:"Sorting Comparison & Recap",
+ learn:"Revisit every sort covered across the last two weeks.",
+ practice:"Build a table: best/avg/worst time, space used, and stability for each sort.",
+ build:"Write one function that picks a 'best' sort based on input size and type.",
+ review:"Pick your favorite sorting algorithm and justify the choice in 2 sentences."},
+{t:"Searching Recap (Linear & Binary)",
+ learn:"Revisit both search types, including edge cases like duplicates and empty arrays.",
+ practice:"Solve 5 search-based problems: first/last occurrence, closest value, etc.",
+ build:"Write a search function that auto-detects whether input is sorted and picks a strategy.",
+ review:"Note 2 real-world uses of binary search you hadn't considered before."},
+{t:"Mixed Recap & Consolidation",
+ learn:"Revisit whichever of the last 13 topics still feels shaky.",
+ practice:"Solve 4 mixed sorting/searching problems (easy difficulty is fine).",
+ build:"Re-implement your weakest sorting algorithm entirely from memory.",
+ review:"Rate your confidence 1–10 on every algorithm covered; flag what to revisit."}
+],
+PM: [
+{t:"What is PM? PM vs Project Management",
+ learn:"What a Product Manager actually owns, and how that differs from project management.",
+ practice:"Write a 1-page comparison of PM vs Project Manager responsibilities.",
+ build:"List 5 decisions you'd make differently as a PM than as a project manager.",
+ review:"Define 'Product Manager' in your own words, with zero jargon."},
+{t:"Product Development Lifecycle",
+ learn:"The Idea → Development → Growth → Maturity → Decline stages.",
+ practice:"Draw and label the full lifecycle using a real product you know well.",
+ build:"Map an AI product (e.g. ChatGPT) onto each stage of the lifecycle.",
+ review:"Note how a PM's priorities shift at each stage of the lifecycle."},
+{t:"Idea Generation Techniques",
+ learn:"Brainstorming frameworks: SCAMPER and 'How Might We' questions.",
+ practice:"Brainstorm 10 product problems you personally run into day to day.",
+ build:"Pick your top 3 ideas and write a 2-sentence pitch for each.",
+ review:"Note which technique generated your strongest ideas and why."},
+{t:"User Research Intro",
+ learn:"Qualitative vs quantitative research, and interview basics.",
+ practice:"Design 8 user research questions for an AI chatbot product.",
+ build:"Run a mock 10-minute interview with a friend or family member using your questions.",
+ review:"Note 2 things that surprised you from the mock interview."},
+{t:"Market Analysis Basics",
+ learn:"Market sizing basics: TAM, SAM, SOM.",
+ practice:"Pick a product you use daily and roughly estimate its TAM/SAM/SOM.",
+ build:"Write a half-page market analysis for a hypothetical AI note-taking app.",
+ review:"Note the single biggest uncertainty in your market-size estimate."},
+{t:"Competitive Analysis",
+ learn:"How to structure a clear competitor comparison.",
+ practice:"Build a table comparing 4 AI chatbots on features, pricing, strengths, weaknesses.",
+ build:"Identify one real gap that none of the 4 competitors currently address.",
+ review:"Note which competitor would worry you most if you were building this product."},
+{t:"Value Proposition Deep Dive",
+ learn:"The value proposition canvas: pains, gains, jobs.",
+ practice:"Write value propositions for 2 products — one AI-based, one traditional.",
+ build:"Find a weak value prop online and rewrite it to be sharper.",
+ review:"Note the 3 elements every strong value proposition needs."},
+{t:"User Personas",
+ learn:"Persona structure: goals, pain points, behaviors, demographics.",
+ practice:"Create 2 detailed personas for an AI product of your choice.",
+ build:"Write a 'day in the life' scenario for each persona.",
+ review:"Note how these two personas would actually use your product differently."},
+{t:"Jobs To Be Done (JTBD)",
+ learn:"The functional, emotional, and social jobs framework.",
+ practice:"Define 3 jobs (one of each type) for an AI product.",
+ build:"Rewrite one feature description in JTBD language: 'when I ___, I want to ___, so I can ___.'",
+ review:"Note how JTBD thinking differs from persona-based thinking."},
+{t:"Product Positioning",
+ learn:"How a positioning statement is structured, and what makes differentiation real.",
+ practice:"Write a 1-page positioning statement for an AI product.",
+ build:"Test your positioning against 2 real competitors' claims — does it hold up?",
+ review:"Note whether your positioning is genuinely defensible or easy to copy."},
+{t:"PRD Intro (Product Requirements Doc)",
+ learn:"Standard PRD structure: problem, goals, requirements, success metrics.",
+ practice:"Read one real example PRD and annotate what each section is doing.",
+ build:"Outline a skeleton PRD for a simple AI feature — empty sections with guiding prompts.",
+ review:"Note the 3 sections you'd personally find hardest to write well."},
+{t:"Feature Prioritization (MoSCoW)",
+ learn:"The Must / Should / Could / Won't framework, with a quick look at RICE.",
+ practice:"Take 12 feature ideas and sort every one into a MoSCoW bucket.",
+ build:"Justify in one sentence why each 'Must Have' actually earned that label.",
+ review:"Recall a time you saw a 'Should Have' get over-prioritized in real life."},
+{t:"Recap: Foundations (Week 1)",
+ learn:"Revisit lifecycle, idea generation, user research, and market analysis.",
+ practice:"Write down 5 concepts learned so far plus 3 open questions.",
+ build:"Apply one of these concepts directly to a product idea of your own.",
+ review:"Rate your confidence 1–10 on explaining each concept to someone else."},
+{t:"Recap: Strategy Toolkit (Week 2)",
+ learn:"Revisit value prop, personas, JTBD, positioning, PRDs, and prioritization.",
+ practice:"Write 5 more concepts, each with a note on how it applies to AI products.",
+ build:"Draft a mini one-page product brief that combines 3+ of these concepts.",
+ review:"Identify your weakest PM concept so far, and why it hasn't clicked yet."}
+],
+AI: [
+{t:"What is an LLM?",
+ learn:"Watch a beginner-friendly LLM explainer (e.g. 3Blue1Brown's series).",
+ practice:"Write 5 key points from the video in your own words.",
+ build:"Explain 'what is an LLM' to a non-technical friend and refine based on what confuses them.",
+ review:"Note 2 things about LLMs you still don't fully understand — flag for later."},
+{t:"Tokens & Context Windows",
+ learn:"What tokens are, and how context windows limit a conversation.",
+ practice:"Count tokens in 5 sample prompts using an online tokenizer.",
+ build:"Test what happens when you push a conversation past a small model's context limit.",
+ review:"Note why token limits matter for both cost and performance."},
+{t:"Temperature, Top-p & Max Tokens",
+ learn:"How each sampling parameter shapes model output.",
+ practice:"Run the same prompt at temperature 0, 0.7, and 1.2 — compare the outputs.",
+ build:"Pick a use case (code vs creative writing) and choose ideal settings, with reasoning.",
+ review:"Note when you'd deliberately want low vs high temperature."},
+{t:"Hands-On Prompting Practice",
+ learn:"Quick review of what makes a prompt clear and unambiguous.",
+ practice:"Write 5 different prompts testing clarity, examples, and explicit format requests.",
+ build:"Take your weakest prompt from today and iterate it 3 times to sharpen it.",
+ review:"Note the single biggest lever you found for better output."},
+{t:"Few-Shot Prompting",
+ learn:"Zero-shot vs few-shot prompting, and when each is appropriate.",
+ practice:"Write one prompt with examples and one without, for the exact same task.",
+ build:"Use few-shot examples to get reliably consistent JSON-formatted output.",
+ review:"Note when few-shot examples help most — usually format-sensitive tasks."},
+{t:"Prompt Anatomy Deep Dive",
+ learn:"The 4 components of a strong prompt: role, instruction, context, format.",
+ practice:"Dissect one complex prompt and label each of its 4 components.",
+ build:"Write your own 4-part prompt from scratch for a real task you actually need done.",
+ review:"Note which component you tend to skip most often — and why."},
+{t:"System Prompts & Role-Playing",
+ learn:"How a system prompt shapes a model's behavior and tone.",
+ practice:"Write one system prompt and test it against 3 different user queries.",
+ build:"Create 2 distinct 'personas' via system prompts and compare their responses.",
+ review:"Note how much the system prompt actually changed tone and behavior."},
+{t:"Hallucinations & AI Limitations",
+ learn:"Why hallucinations happen and the common failure modes behind them.",
+ practice:"Ask the model 5 tricky questions specifically designed to trigger a hallucination.",
+ build:"Write a prompt strategy that reduces hallucination risk (ask for sources, ask for uncertainty).",
+ review:"Note 2 domains where you'd never trust an unverified AI answer."},
+{t:"Chain-of-Thought Prompting",
+ learn:"How chain-of-thought prompting improves multi-step reasoning.",
+ practice:"Compare a plain prompt vs a CoT prompt on the same math or logic problem.",
+ build:"Apply chain-of-thought prompting to a real problem you're actually working on.",
+ review:"Note when CoT genuinely helps vs when it's unnecessary overhead."},
+{t:"Prompt Engineering Frameworks",
+ learn:"Overview of structured frameworks like RTF and CRISPE.",
+ practice:"Test one framework on a real task and document exactly how you structured it.",
+ build:"Create your own reusable prompt template for a task you do often.",
+ review:"Note which framework felt most natural to your own thinking style."},
+{t:"Model Comparison",
+ learn:"Overview of major model families and their relative strengths.",
+ practice:"Run the same prompt on 2–3 different models and compare output quality.",
+ build:"Write a short 'when to use which model' cheat sheet based on your own tests.",
+ review:"Note the single biggest quality difference you observed between models."},
+{t:"Use Case Analysis",
+ learn:"How AI is being applied across different industries today.",
+ practice:"Pick one domain (healthcare, finance, education) and list 5 concrete AI use cases.",
+ build:"Pick your favorite use case and sketch a rough product concept around it.",
+ review:"Note which use case felt most technically feasible to build today."},
+{t:"Embeddings Intro",
+ learn:"What embeddings are, and why they enable semantic search.",
+ practice:"Generate embeddings for 5 sentences and compare their similarity scores.",
+ build:"Build a tiny 'find the most similar sentence' demo using cosine similarity.",
+ review:"Note one product idea that embeddings could power."},
+{t:"End-to-End Prompt Engineering Workflow",
+ learn:"Review the full workflow: role + instruction + example + format, combined.",
+ practice:"Design one complete, production-quality prompt using all 4 elements together.",
+ build:"Test your prompt against 3 edge-case inputs and refine it based on what breaks.",
+ review:"Write your own personal 'prompt checklist' to reuse going forward."}
+]
+};
+
+// ---------- Extended curriculum titles (sessions 15 onward), by phase ----------
+const EXTRA_TITLES = {
+JS: ["ES6+ Modules (import/export)","Closures","Higher-Order Functions","Functional Programming Basics","OOP in JS: Classes & Constructors","Prototypes & Inheritance","The `this` Keyword & Binding","Generators & Iterators","Map & Set Data Structures","Date & Math Objects","Immutability & Pure Functions","Currying & Function Composition","Memoization","Recursion in JavaScript","The Event Loop & Call Stack","Microtasks vs Macrotasks","DOM Selection & Traversal","DOM Manipulation & Rendering","Event Listeners & Event Object","Event Delegation","Forms & Input Validation","localStorage & sessionStorage","Browser APIs Overview","AbortController & Fetch Cancellation","Debugging with DevTools","Code Quality & ESLint","Unit Testing Basics (Jest)","Mocking in Tests","Git Basics for JS Projects","npm & package.json","Module Bundlers (Webpack/Vite) Overview","CommonJS vs ES Modules","Node.js Fundamentals","The Node.js Module System","Building a REST API with Express","Express Routing","Express Middleware","Connecting to a Database (MongoDB/Postgres)","CRUD Operations End-to-End","Authentication Basics (JWT)","Environment Variables & Config","Error Handling in Express Apps","RESTful API Design Principles","Building a Full Backend Service","Testing APIs with Postman/curl","Rate Limiting Basics","CORS Explained","Deploying a Node App","Logging & Monitoring Basics","Caching Strategies","WebSockets Introduction","Real-Time Features with Sockets","GraphQL Introduction","GraphQL vs REST","Building a GraphQL API","ORMs (Prisma/Sequelize) Basics","Database Schema Design","Migrations & Seeding","Connecting Frontend to Backend","Loading & Error State Patterns","Full CRUD App: End-to-End Build","Backend Performance Profiling","Security Basics: SQL Injection & XSS","Input Sanitization","Background Jobs & Queues Intro","React Fundamentals & JSX","Props & State","The useState Hook","The useEffect Hook","Component Lifecycle in React","Conditional Rendering & Lists","Forms in React (Controlled Inputs)","Custom Hooks","The Context API","useReducer & State Patterns","React Router Basics","Fetching Data in React","Component Composition Patterns","Performance: useMemo & useCallback","Testing React (React Testing Library)","Multi-Page React App Build","Connecting React to Your Backend","Authentication in React Apps","Protected Routes","Deploying a React App","Styling: CSS Modules & Tailwind","Component Libraries Overview","Accessibility Basics in React","Responsive Design Patterns","Animation Basics (Framer Motion)","Full-Stack Project Architecture","CI Basics for Frontend","Error Boundaries","Code Splitting & Lazy Loading","SEO Basics for SPAs","State Persistence Patterns","Optimistic UI Updates","WebSocket Integration in React","Real-Time Chat Feature Build","File Upload Handling","Image Optimization","Form Libraries (React Hook Form)","Validation Libraries (Zod)","Building a Dashboard UI","Data Visualization Basics","Building a Settings/Profile Page","TypeScript Basics","Types & Interfaces","Generics Introduction","Typing React Components","Typing API Responses","Advanced Types (Union/Intersection)","TypeScript in a Node Backend","Migrating JS to TypeScript","Design Patterns: Singleton & Factory","Design Patterns: Observer & Module","Clean Code Principles","Refactoring Techniques","Performance Optimization Deep Dive","Bundle Size Optimization","Memory Leaks & Debugging","Browser Rendering Pipeline","Web Vitals & Performance Metrics","Accessibility Deep Dive (ARIA)","Testing Strategy: Unit vs Integration vs E2E","E2E Testing (Playwright/Cypress)","CI/CD Pipeline Basics","Docker Basics for JS Apps","Production Deployment Checklist","Monitoring & Error Tracking (Sentry)","System Design for Frontend Engineers","JS Interview Pattern Drilling","Mock Coding Interview Practice","Capstone Project: Planning & Architecture","Capstone Project: Core Build","Capstone Project: Testing & Polish","Capstone Project: Deployment","Capstone Project: Documentation & Demo","Interview Storytelling for JS Projects"],
+DSA: ["Linked Lists: Singly Linked List","Linked Lists: Doubly Linked List","Linked List Problems (Reverse, Cycle Detection)","Stacks: Concept & Implementation","Stack Problems (Valid Parentheses, Min Stack)","Queues: Concept & Implementation","Circular Queues & Deques","Stack/Queue Applications","Hash Maps Deep Dive","Hash Map Problems (Two Sum, Anagrams)","Hash Set Use Cases","Recursion Deep Dive","Recursion vs Iteration","Backtracking Introduction","Backtracking: Subsets & Permutations","Backtracking: N-Queens","Trees: Terminology & Structure","Binary Trees: Implementation","Tree Traversal (Inorder/Preorder/Postorder)","Tree BFS (Level Order Traversal)","Tree Height & Depth Problems","Binary Search Trees (BST)","BST Insert, Delete & Search","BST Validation","Balanced Trees Concept (AVL)","Tries: Introduction & Implementation","Trie Problems (Autocomplete)","Heaps Deep Dive","Priority Queue Problems","Graphs: Representation (List/Matrix)","Graph BFS","Graph DFS","Graph Traversal Problems","Connected Components","Cycle Detection in Graphs","Topological Sort","Dijkstra's Algorithm","Bellman-Ford Introduction","Union-Find (Disjoint Set)","Union-Find: Kruskal's MST","Minimum Spanning Tree Concepts","Two Pointers Technique","Two-Pointer Problems","Sliding Window Technique","Sliding Window Problems (Max Subarray)","Fast & Slow Pointers (Cycle Detection)","Prefix Sum Technique","Prefix Sum Problems","Bit Manipulation Basics","Bit Manipulation Problems","Dynamic Programming: Memoization vs Tabulation","DP: Fibonacci & Climbing Stairs","DP: Coin Change","DP: 0/1 Knapsack","DP: Longest Common Subsequence","DP: Longest Increasing Subsequence","DP: Edit Distance","DP: Matrix Path Problems","Greedy Algorithms Introduction","Greedy Problems (Activity Selection)","Interval Problems (Merge Intervals)","Matrix Traversal Problems","String Matching (KMP Introduction)","Advanced String Problems","Segment Trees Introduction","Fenwick Tree (BIT) Introduction","Advanced Graph Algorithms (Floyd-Warshall)","System Design: Scalability Basics","System Design: Load Balancing","System Design: Caching Strategies","System Design: Database Sharding","System Design: URL Shortener","System Design: Rate Limiter","System Design: Chat System","Mock Interview: Arrays & Strings","Mock Interview: Trees & Graphs","Mock Interview: Dynamic Programming","Company-Style Problem Set: Round 1","Company-Style Problem Set: Round 2","Company-Style Problem Set: Round 3","Time Complexity Drilling","Space Optimization Techniques","Advanced DP: Bitmask DP","Advanced DP: Tree DP","Graph Coloring Problems","A* Search Algorithm Introduction","Randomized Algorithms Introduction","Advanced Backtracking (Sudoku Solver)","Timed Practice: Arrays & Strings","Timed Practice: Linked Lists & Stacks","Timed Practice: Trees & Graphs","Timed Practice: Dynamic Programming","Timed Practice: Greedy & Intervals","Timed Practice: Bit Manipulation & Math","Weak-Spot Review Session","DSA Portfolio: Problem Write-Ups","DSA Interview Storytelling Prep","Mock Interview: Full Marathon Round 1","Mock Interview: Full Marathon Round 2"],
+PM: ["Design Thinking Basics","Wireframing Fundamentals","Low-Fidelity Prototyping","Usability Testing Basics","MVP Definition","Go-To-Market Strategy Basics","Metrics & KPIs Introduction","North Star Metric Framework","A/B Testing Fundamentals","Funnel Analysis","Retention & Churn Basics","Cohort Analysis","User Interviews: Advanced Techniques","Stakeholder Mapping","Roadmapping Fundamentals","Roadmap Prioritization Frameworks (RICE)","Writing a Full PRD","Writing User Stories","Acceptance Criteria & Definition of Done","Working with Engineering: Sprint Basics","Agile & Scrum Fundamentals","Working with Design: Handoff Process","Launch Planning","Beta Testing Programs","Gathering & Synthesizing Feedback","Iteration Planning Post-Launch","Pricing Strategy Basics","Monetization Models (Freemium, Subscription)","Unit Economics Basics (CAC, LTV)","Growth Loops & Virality","Onboarding Design Principles","Activation Metrics","Feature Flagging & Rollouts","Experimentation Culture","Data-Informed Decision Making","Building Dashboards for Product Metrics","Platform Thinking","Partnerships & Integrations Strategy","API Products & Developer Experience","Competitive Positioning at Scale","Product Strategy Frameworks","Vision & Strategy Documents","OKRs for Product Teams","Cross-Functional Leadership","Influence Without Authority","Managing Up: Working with Execs","Prioritization Under Constraints","Saying No: Scope Management","Handling Conflicting Stakeholder Needs","Product Ops Basics","Internationalization & Localization Strategy","Accessibility as a Product Requirement","Trust & Safety Considerations","Privacy & Data Governance for PMs","Building for Enterprise vs Consumer","B2B Product Management Basics","Sales & Customer Success Collaboration","Customer Advisory Boards","Case Study: A Successful AI Product","Case Study: A Failed Product Launch","Writing a Product Case Study","Building a Product Portfolio","Product Sense Interview Practice","Metrics Interview Practice","Execution Interview Practice","Strategy Interview Practice","Behavioral Interview Prep for PMs","Mock PM Interview: Product Design","Mock PM Interview: Root Cause Analysis","Mock PM Interview: Estimation Questions","Building Your PM Narrative","Negotiation Basics for PMs","Building & Leading Teams","Hiring for Product Teams","Managing PM Career Growth","Final Portfolio Review & Polish","Final Interview Readiness Check"],
+AI: ["Retrieval-Augmented Generation (RAG) Basics","Vector Databases Introduction","Building a Simple RAG Pipeline","Fine-Tuning: Concepts & When to Use It","LoRA & Parameter-Efficient Fine-Tuning","Evaluation Metrics for LLMs","Building an Evaluation Harness","AI Safety Basics","Bias & Fairness in AI Models","Building Your First AI App (Chatbot)","Multi-Turn Conversation Management","Context Management Strategies","Function Calling / Tool Use Basics","Building an AI Agent: Core Loop","Agent Planning & Reasoning Patterns","Multi-Agent Systems Intro","Building an Agent with Tool Access","Observability for AI Applications","Logging & Tracing LLM Calls","Cost Optimization for LLM Apps","Latency & Throughput Analysis","Prompt Caching Strategies","Structured Output & JSON Mode","Guardrails & Content Filtering","Semantic Search Deep Dive","Hybrid Search (Keyword + Semantic)","Chunking Strategies for RAG","Advanced RAG: Re-ranking","Advanced RAG: Query Rewriting","LLMOps: Deployment Basics","LLMOps: Versioning & Rollbacks","LLMOps: Monitoring in Production","Building an AI Feature into a Real Product","API Design for AI Features","Streaming Responses (SSE)","Rate Limiting AI API Usage","Handling AI API Failures Gracefully","Cost Analysis: Model Pricing Comparison","AI Business Models Overview","Build vs Buy Decisions for AI Features","AI Product Metrics That Matter","Multi-Modal Models: Vision + Language","Image Generation Models Overview","Audio & Speech Models Overview","Building a Multi-Modal Feature","Advanced Prompt Architectures","Prompt Chaining & Pipelines","Orchestration Frameworks Overview","Building a Custom Tool for an Agent","Memory Systems for AI Agents","Long-Term vs Short-Term Context","Evaluating Agent Reliability","Red-Teaming Your AI Application","Handling Adversarial Prompts","AI Regulation & Compliance Basics","Explainability in AI Systems","Scaling AI Infrastructure Concepts","Choosing the Right Model for a Task","Open Source vs Proprietary Models","Self-Hosting Models: Trade-offs","Emerging Trends: Reasoning Models","Emerging Trends: Autonomous Agents","Case Study: A Successful AI Product","Case Study: An AI Product Failure","Portfolio AI Project: Planning","Portfolio AI Project: Core Build","Portfolio AI Project: Evaluation","Portfolio AI Project: Polish","Portfolio AI Project: Demo & Docs","AI Interview Prep: Technical Concepts","AI Interview Prep: Product Thinking","AI Interview Prep: System Design for AI","Mock AI Interview: Full Round","Final AI Portfolio Review"]
+};
+
+// ---------- New tracks, added to the rotation starting Aug 25, 2026 ----------
+const JS_WEBDEV = ["Connecting JS to the DOM (Real Project)","Interactive Navbar (Mobile Menu)","Image Carousel / Slider","Modal / Popup Component","Tabs Component","Accordion Component","Form Validation in a Real Form","Multi-Step Form","To-Do List App","Weather App (API Integration)","Quiz App","Countdown Timer","Image Gallery with Filtering","LocalStorage: Persisting App Data","Notes App with LocalStorage","CSS Animations & Transitions","Landing Page with Animations","HTML Fundamentals: Structure & Semantic Tags","CSS Fundamentals: Selectors & Box Model","CSS Flexbox Layout","CSS Grid Layout","Responsive Design & Media Queries","CSS Positioning & Stacking Context","Typography & Web Fonts","Color Systems & CSS Variables","Landing Page: Hero Section","Landing Page: Features Section","Landing Page: Nav & Footer","Portfolio Website: Planning","Portfolio Website: Hero & About","Portfolio Website: Projects Section","Portfolio Website: Contact Form","Portfolio Website: Polish & Deploy","Git & GitHub for Web Projects","Deploying a Static Site (Netlify/Vercel)","Blog Layout (Static)","E-commerce Product Page","Shopping Cart (Client-Side Logic)","Pricing Page","Dashboard Layout (Static)","Dashboard with Live Data (API)","Recipe Finder App (API)","Movie Search App (API)","GitHub Profile Finder (API)","Currency Converter (API)","Expense Tracker App","Habit Tracker App","CSS Preprocessors (Sass) Intro","Utility-First CSS (Tailwind Basics)","Rebuild a Past Project with Tailwind","Chat UI (Static + Mock Data)","Kanban Board (Drag & Drop)","Calendar / Scheduler UI","Music Player UI","Social Media Feed UI","Performance: Optimize a Real Page","Accessibility Pass on a Real Project","SEO Basics: Meta Tags & Structure","Multi-Page Site with Routing","Connecting a Real Backend API","Login/Signup Flow (Frontend)","Personal Project: Planning","Personal Project: Core Build","Personal Project: Polish","Personal Project: Deploy & Share","Refactor an Old Project","Resume/CV Website","Landing Page for a Fake Startup","SaaS Marketing Site","Newsletter Signup Widget","Testimonials Carousel","Pricing Toggle (Monthly/Yearly)","FAQ Accordion Section","Job Board Listing Page","Event Landing Page","Website Speed Optimization","Cross-Browser Compatibility Testing","PWA Basics","Capstone: Planning","Capstone: Build Week 1","Capstone: Build Week 2","Capstone: Testing & Polish","Capstone: Deploy & Showcase"];
+
+const BUS_TITLES = ["What is Business Strategy? Core Concepts","Business Models 101 (How Companies Make Money)","Revenue Models: Subscription vs Transactional vs Ads","Reading a P&L Statement (Profit & Loss)","Reading a Balance Sheet","Unit Economics Deep Dive (CAC, LTV, Payback)","Break-Even Analysis","SWOT Analysis Practice","Porter's Five Forces Framework","Industry & Market Analysis","Competitive Strategy Basics","Marketing Fundamentals: The 4 Ps","Branding & Positioning Basics","Sales Fundamentals: The Sales Funnel","B2B vs B2C Business Models","Startup Fundamentals: Idea to MVP","Fundraising Basics: Seed to Series A","Startup Valuation Basics","Business Case Writing","Financial Projections Basics","Pricing Strategy Deep Dive","Negotiation Fundamentals","Negotiation: Real Scenario Practice","Business Communication: Emails & Memos","Reading a Company's Annual Report","Stock Markets Basics","Economics 101: Supply & Demand","Economics: Market Structures","Operations Management Basics","Supply Chain Fundamentals","Business Ethics & Corporate Governance","Mergers & Acquisitions Basics","Case Study: A Business Failure","Case Study: A Business Turnaround","Case Interview Practice: Market Sizing","Case Interview Practice: Profitability","Case Interview Practice: Growth Strategy","Business Plan: Executive Summary","Business Plan: Market Analysis","Business Plan: Financial Plan","Growth Strategy: Ansoff Matrix","Blue Ocean Strategy Basics","Lean Startup Methodology","Business Model Canvas Practice","Customer Acquisition Strategy","Customer Retention Strategy","Partnerships & Business Development","Understanding Venture Capital","Understanding Private Equity Basics","International Business Basics","Business Risk Management","Corporate vs Business Unit Strategy","Analyzing a Public Company (10-K Style)","Analyzing a Tech Company's Business Model","Analyzing an AI Company's Business Model","Investing Basics for Financial Literacy","Business Negotiation: Vendor Contracts","Pitch Deck: Structure","Pitch Deck: Storytelling","Practice Pitch: Present Your Business Idea","Strategy Capstone: Planning","Strategy Capstone: Research","Strategy Capstone: Recommendations","Strategy Capstone: Presentation"];
+
+const UIUX_TITLES = ["What is UX Design? Core Principles","Design Thinking Process Deep Dive","User Research Methods for Design","Information Architecture Basics","User Flows & Journey Mapping","Wireframing: Low-Fidelity Sketches","Wireframing Tools: Figma Basics","Figma: Frames, Components & Auto Layout","Typography Fundamentals for UI","Color Theory for Digital Products","Visual Hierarchy Principles","Nielsen's 10 Usability Heuristics","Designing for Accessibility (WCAG Basics)","Mobile-First Design Principles","Responsive Design Patterns for UI","Design Systems: What & Why","Building a Mini Design System in Figma","Component Design: Buttons & Inputs","Component Design: Cards & Lists","Navigation Patterns (Nav Bars, Tabs, Drawers)","Form Design Best Practices","Onboarding Flow Design","Empty States & Error States Design","Microinteractions & Animation Principles","Prototyping in Figma: Basic Interactions","Prototyping in Figma: Advanced Flows","Usability Testing: Planning a Test","Usability Testing: Running & Analyzing","Heuristic Evaluation Practice","Redesign an App You Use Daily","Critique a Popular App's UX","Critique an AI Product's UX","Mobile App Design: Wireframes","Mobile App Design: High-Fidelity Screens","Mobile App Design: Prototype & Test","Designing a Dashboard: Data-Heavy UI","Onboarding for an AI Product","Designing a Chat Interface (AI Product UX)","Designing for Trust in AI Products","Dark Patterns: What to Avoid","Content Design & UX Writing Basics","Microcopy: Better Button & Error Text","Design Handoff to Engineering","UX Portfolio Case Study: Structure","UX Portfolio Case Study: Problem Framing","UX Portfolio Case Study: Process","UX Portfolio Case Study: Outcomes","Design Critique Skills: Giving Feedback","Design Critique Skills: Receiving Feedback","Accessibility Deep Dive: Screen Readers & ARIA","Designing for Different Cultures","Landing Page UX Best Practices","E-commerce UX Patterns","SaaS Product UX Patterns","UX for AI Agents & Conversational Interfaces","UX Capstone: Problem & Research","UX Capstone: Design & Prototype","UX Capstone: Test & Iterate","UX Capstone: Case Study Write-Up"];
+
+const DA_TITLES = ["Spreadsheets Deep Dive: Formulas & Functions","Pivot Tables Mastery","Data Cleaning Techniques","SQL Basics: SELECT, WHERE, ORDER BY","SQL: JOINs (Inner, Left, Right, Full)","SQL: GROUP BY & Aggregate Functions","SQL: Subqueries","SQL: Window Functions","SQL Practice Problem Set 1","SQL Practice Problem Set 2","Statistics Basics: Mean, Median, Mode, Variance","Statistics: Distributions (Normal, Binomial)","Statistics: Standard Deviation & Z-Scores","Hypothesis Testing Basics","A/B Test Analysis: Statistical Significance","Confidence Intervals Explained","Correlation vs Causation","Regression Analysis Basics","Intro to Python for Data Analysis","Python: Pandas Basics (DataFrames)","Python: Data Cleaning with Pandas","Python: Grouping & Aggregating with Pandas","Python: Merging Datasets with Pandas","Data Visualization Principles","Charts: Bar, Line, Pie — When to Use What","Dashboard Design Principles","Product Analytics Tools Overview (Amplitude/Mixpanel)","Funnel Analysis: Deep Dive","Cohort Analysis: Deep Dive","Retention Curves & Analysis","Building a Metrics Dashboard (Mock Data)","Public Dataset Exploration","Public Dataset: Drawing Insights","Writing a Data-Driven Report","Storytelling with Data: Best Practices","KPI Design: Choosing the Right Metrics","North Star Metric: Deep Application","Experimentation: Designing an A/B Test","Experimentation: Reading Test Results","Forecasting Basics: Trend Analysis","Building a Simple Forecast Model","Data Quality: Spotting Bad Data","Survey Design & Analysis","Customer Segmentation Analysis","RFM Analysis (Recency, Frequency, Monetary)","Building a Churn Analysis","Acquisition Channel Analysis","SQL + Product Case Study 1","SQL + Product Case Study 2","Analytics Case Interview Practice","Analytics Report: Planning","Analytics Report: Analysis","Analytics Report: Presentation","Advanced Formulas (INDEX/MATCH)","Analytics Capstone: Dataset Selection","Analytics Capstone: Cleaning & Exploration","Analytics Capstone: Analysis & Insights","Analytics Capstone: Dashboard Build","Analytics Capstone: Presentation & Write-Up"];
+
+const COMM_TITLES = ["Public Speaking Fundamentals","Structuring a Clear Presentation","Storytelling with Data (Communication Angle)","Writing Clearly & Concisely","Active Listening Skills","Giving Constructive Feedback","Receiving Feedback Gracefully","Executive Communication: Talking to Leadership","Facilitating a Meeting Effectively","Negotiation Communication Tactics","Cross-Cultural Communication Basics","Email & Slack Communication Norms","Explaining Technical Concepts to Non-Technical People","Handling Difficult Conversations","Building Your Elevator Pitch","Practicing a Mock Presentation","Persuasive Communication Techniques","Communicating Product Decisions to Stakeholders","Written Communication: Documentation Clarity","Record & Review Your Own Presentation"];
+
+function templateBlocks(subj, title){
+  if(subj==="JS") return {
+    learn:`Study ${title}: the core concept, mental model, and 2–3 short reference examples.`,
+    practice:`Drill ${title} with 6–8 targeted exercises until the pattern feels automatic.`,
+    build:`Apply ${title} inside a small script or feature you build from scratch today.`,
+    review:`Write 3 notes on ${title}: one gotcha, one use case, one thing to revisit.`
+  };
+  if(subj==="DSA") return {
+    learn:`Study how ${title} works: the core idea, complexity, and a worked example.`,
+    practice:`Solve 4–6 problems using ${title}, starting easy and increasing difficulty.`,
+    build:`Implement ${title} from scratch without references, then test it on edge cases.`,
+    review:`Note when ${title} is the right tool to reach for, and its complexity trade-offs.`
+  };
+  if(subj==="PM") return {
+    learn:`Study ${title}: what it is, when PMs use it, and a real example from a product you know.`,
+    practice:`Apply ${title} directly to an AI product idea you're tracking — write it out fully.`,
+    build:`Turn today's work on ${title} into a one-page artifact (doc, table, or diagram).`,
+    review:`Note how ${title} would change a real product decision you've seen made.`
+  };
+  return {
+    learn:`Study ${title}: the core idea and why it matters for working with LLMs day to day.`,
+    practice:`Test ${title} hands-on with 3–5 prompts or examples, comparing results.`,
+    build:`Apply ${title} to a real prompt or mini-project you're actually using.`,
+    review:`Note one surprising result and one open question about ${title}.`
+  };
+}
+function roundBlocks(title){
+  return {
+    learn:`Revisit ${title} at a deeper level — push into edge cases, nuance, or harder variations this round.`,
+    practice:`Work through fresh practice on ${title}, deliberately harder than last time.`,
+    build:`Apply ${title} to something more ambitious than before, testing real retention.`,
+    review:`Note how much stronger your grasp of ${title} feels compared to when you first learned it.`
+  };
+}
+
+function getTopic(subj, sessionIdx){
+  const detailed = DETAILED[subj];
+  if(sessionIdx < detailed.length) return detailed[sessionIdx];
+  const extraIdx = sessionIdx - detailed.length;
+  const arr = EXTRA_TITLES[subj];
+  const cycle = Math.floor(extraIdx/arr.length);
+  const idx = extraIdx % arr.length;
+  const baseTitle = arr[idx];
+  const title = cycle>0 ? `${baseTitle} (Round ${cycle+1})` : baseTitle;
+  const blocks = cycle>0 ? roundBlocks(baseTitle) : templateBlocks(subj, baseTitle);
+  return {t:title, ...blocks};
+}
+
+// ---------- Blocks + getters for the new tracks (Business, UI/UX, Data Analytics, Communication, JS web-dev) ----------
+function jsWebBlocks(title){
+  return {
+    learn:`Study ${title}: the key concept, and look at 1–2 real sites that use it.`,
+    practice:`Code along and get the base version fully working — build it, don't just read.`,
+    build:`Extend it and make it your own: different content, better styling, or an extra feature.`,
+    review:`Note one bug you hit and how you fixed it, plus one snippet worth reusing later.`
+  };
+}
+function getTopicJSWeb(idx){
+  const arr = JS_WEBDEV;
+  const cycle = Math.floor(idx/arr.length);
+  const i = idx % arr.length;
+  const baseTitle = arr[i];
+  if(cycle===0) return {t:baseTitle, ...jsWebBlocks(baseTitle)};
+  return {t:`${baseTitle} (Round ${cycle+1})`, ...roundBlocks(baseTitle)};
+}
+
+function templateBlocksNew(subj, title){
+  if(subj==="BUS") return {
+    learn:`Study ${title}: the core concept and a real business example it shows up in.`,
+    practice:`Work through 2–3 exercises or mini-cases applying ${title}.`,
+    build:`Apply ${title} to a real company or product you know — write it out fully.`,
+    review:`Note how ${title} connects to a decision a PM would actually make.`
+  };
+  if(subj==="UIUX") return {
+    learn:`Study ${title}: the core principle, with 2–3 real examples from apps you use.`,
+    practice:`Practice ${title} hands-on — sketch, critique, or design something small.`,
+    build:`Apply ${title} to a real screen or flow in Figma (or on paper if no Figma).`,
+    review:`Note one thing you'd change in a real app based on ${title}.`
+  };
+  if(subj==="DA") return {
+    learn:`Study ${title}: the core concept and why it matters for product decisions.`,
+    practice:`Work through 3–5 exercises or queries applying ${title}.`,
+    build:`Apply ${title} to a real or sample dataset and write down what you find.`,
+    review:`Note one product decision ${title} could actually inform.`
+  };
+  return {
+    learn:`Study ${title}: what good looks like, with 1–2 real examples.`,
+    practice:`Practice ${title} out loud or in writing — do the actual rep, don't just read.`,
+    build:`Apply ${title} to something real — a message you need to send or say this week.`,
+    review:`Note what felt awkward and what you'd do differently next time.`
+  };
+}
+function getTopicGeneric(subj, arr, idx){
+  const cycle = Math.floor(idx/arr.length);
+  const i = idx % arr.length;
+  const baseTitle = arr[i];
+  if(cycle===0) return {t:baseTitle, ...templateBlocksNew(subj, baseTitle)};
+  return {t:`${baseTitle} (Round ${cycle+1})`, ...roundBlocks(baseTitle)};
+}
+
+// ---------- Build 730 days starting Monday Aug 17, 2026 ----------
+// Days 0-7 (Aug 17-24): original 4-subject rotation, untouched.
+// Day 8 onward (Aug 25+): Business / UI/UX / Data Analytics join, JS becomes
+// practical web-dev, and Communication takes over one day roughly every 4 weeks.
+const startDate = new Date(2026,7,17);
+const TOTAL_DAYS = 730;
+
+let jsOldCounter=0, dsaCounter=0, pmCounter=0, aiCounter=0;
+let jsWebCounter=0, busCounter=0, uiuxCounter=0, daCounter=0, commCounter=0;
+
+const DAYS = [];
+for(let i=0;i<TOTAL_DAYS;i++){
+  const d = new Date(startDate);
+  d.setDate(startDate.getDate()+i);
+  let subj, topic;
+
+  if(i<8){
+    subj = OLD_ORDER[i%4];
+    if(subj==="JS")       topic = getTopic("JS", jsOldCounter++);
+    else if(subj==="DSA") topic = getTopic("DSA", dsaCounter++);
+    else if(subj==="PM")  topic = getTopic("PM", pmCounter++);
+    else                  topic = getTopic("AI", aiCounter++);
+  } else {
+    const j = i-8;
+    if((j+1)%28===0){
+      subj = "COMM";
+      topic = getTopicGeneric("COMM", COMM_TITLES, commCounter++);
+    } else {
+      subj = NEW_ORDER[j%7];
+      if(subj==="JS")        topic = getTopicJSWeb(jsWebCounter++);
+      else if(subj==="DSA")  topic = getTopic("DSA", dsaCounter++);
+      else if(subj==="PM")   topic = getTopic("PM", pmCounter++);
+      else if(subj==="AI")   topic = getTopic("AI", aiCounter++);
+      else if(subj==="BUS")  topic = getTopicGeneric("BUS", BUS_TITLES, busCounter++);
+      else if(subj==="UIUX") topic = getTopicGeneric("UIUX", UIUX_TITLES, uiuxCounter++);
+      else                   topic = getTopicGeneric("DA", DA_TITLES, daCounter++);
+    }
+  }
+  DAYS.push({date:d, subj, topic});
+}
+
+const WEEKDAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const MONTHNAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+function buildCalendar(){
+  const container = document.getElementById('calendar');
+  const jump = document.getElementById('jump');
+  const byMonth = {};
+  const monthKeys = [];
+  DAYS.forEach(day=>{
+    const key = day.date.getFullYear()+"-"+day.date.getMonth();
+    if(!byMonth[key]){ byMonth[key]=[]; monthKeys.push(key); }
+    byMonth[key].push(day);
+  });
+
+  monthKeys.forEach(key=>{
+    const monthDays = byMonth[key];
+    const first = monthDays[0].date;
+    const year = first.getFullYear();
+    const month = first.getMonth();
+    const anchorId = "m-"+key;
+
+    const jumpLink = document.createElement('a');
+    jumpLink.href = "#"+anchorId;
+    jumpLink.textContent = MONTHNAMES[month].slice(0,3)+" '"+String(year).slice(2);
+    jump.appendChild(jumpLink);
+
+    const monthEl = document.createElement('div');
+    monthEl.className = 'month';
+    monthEl.id = anchorId;
+    const h2 = document.createElement('h2');
+    h2.textContent = MONTHNAMES[month] + " " + year;
+    monthEl.appendChild(h2);
+
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    WEEKDAYS.forEach(wd=>{
+      const wdEl = document.createElement('div');
+      wdEl.className='wd';
+      wdEl.textContent=wd;
+      grid.appendChild(wdEl);
+    });
+
+    const firstWeekday = first.getDay();
+    for(let i=0;i<firstWeekday;i++){
+      const empty = document.createElement('div');
+      empty.className='cell empty';
+      grid.appendChild(empty);
+    }
+
+    monthDays.forEach(day=>{
+      const cell = document.createElement('div');
+      const subjInfo = SUBJECTS[day.subj];
+      cell.className = 'cell ' + subjInfo.key;
+      cell.innerHTML = `
+        <div>
+          <div class="num">${day.date.getDate()}</div>
+          <span class="subj">${day.subj}</span>
+        </div>
+        <div class="topic">${day.topic.t}</div>
+      `;
+      cell.addEventListener('click', ()=>openModal(day));
+      grid.appendChild(cell);
+    });
+
+    monthEl.appendChild(grid);
+    container.appendChild(monthEl);
+  });
+}
+
+function openModal(day){
+  const subjInfo = SUBJECTS[day.subj];
+  const modal = document.getElementById('modal');
+  const dateStr = day.date.toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric', year:'numeric'});
+  modal.innerHTML = `
+    <button class="close" onclick="closeModal()">✕</button>
+    <span class="subj ${subjInfo.key}">${subjInfo.name}</span>
+    <h3>${day.topic.t}</h3>
+    <div class="date-line">${dateStr} · 2.5 hour focus block</div>
+    <div class="block"><div class="lbl"><span>Learn</span><span>40 min</span></div><div class="desc">${day.topic.learn}</div></div>
+    <div class="block"><div class="lbl"><span>Practice</span><span>60 min</span></div><div class="desc">${day.topic.practice}</div></div>
+    <div class="block"><div class="lbl"><span>Build / Apply</span><span>30 min</span></div><div class="desc">${day.topic.build}</div></div>
+    <div class="block"><div class="lbl"><span>Review & Notes</span><span>20 min</span></div><div class="desc">${day.topic.review}</div></div>
+  `;
+  modal.querySelector('.subj').style.background =
+    getComputedStyle(document.documentElement).getPropertyValue('--'+subjInfo.key);
+  document.getElementById('overlay').classList.add('show');
+}
+function closeModal(){
+  document.getElementById('overlay').classList.remove('show');
+}
+document.getElementById('overlay').addEventListener('click', (e)=>{
+  if(e.target.id==='overlay') closeModal();
+});
+
+buildCalendar();
+</script>
+</body>
+</html>
