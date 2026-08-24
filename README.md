@@ -2,7 +2,7 @@
 
 **Duration:** Aug 17, 2026 → Aug 15, 2028 (730 days)
 **Daily commitment:** 2.5 hours, one subject at a time, every day
-**Goal:** Become a job-ready "AI Expert Product Manager" — strong in product thinking, AI fundamentals, hands-on web dev, data, design, and business — as a BCA student building a portfolio from scratch.
+**Goal:** Become a job-ready "AI Expert Product Manager" — strong in product thinking, AI fundamentals, hands-on web dev, data, design, and business — as a BCA student building a portfolio from scratch.....
 
 ---
 
